@@ -74,10 +74,10 @@ for epoch = epoch:maxepoch
     errsum=0;
     for batch = 1:numbatches,
 %         fprintf(1,'epoch %d batch %d\r',epoch,batch); 
-        fprintf('.');
-        if mod(batch, 50) == 0
-            fprintf('\n');
-        end
+%         fprintf('.');
+%         if mod(batch, 50) == 0
+%             fprintf('\n');
+%         end
 
         visbias = repmat(visbiases,numcases,1);
         hidbias = repmat(2*hidbiases,numcases,1);   % hidden bias has weight 2 (DBM purpose)

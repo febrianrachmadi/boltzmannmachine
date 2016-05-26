@@ -1,3 +1,4 @@
+%% Load data
 randn('state',100);
 rand('state',100);
 warning off
@@ -7,15 +8,22 @@ warning off
 clear all
 close all
 
+tic
 fprintf('Loading data.. \n');
+data_path = '/home/febrian/dataDBM';
 dir_path = '/home/s1467961/V/frachmadi_ADNI/febdissdata/segmentation/groundtruth_ready';
-load(sprintf('features_dl_all_120k_rand_flair.mat'))
+load(sprintf('%s/features_dl_all_120k_rand_flair.mat', data_path))
+t = toc;
+disp(['Load time: ' num2str(t)])
 
-fprintf('Pretraining a Deep Boltzmann Machine. \n');
+tic
+fprintf('Load batch data..\n');
 makebatches_mri; 
 [numcases, numdims, numbatches]=size(batchdata);
-% [numcases, numdims, numbatches]=size(testbatchdata);
+t = toc;
+disp(['Load batch time: ' num2str(t)])
 
+%% DBM start
 layers = [1331, 10, 15, 10, 15];
 numlayers = numel(layers)-1;
 numlab = 2;
@@ -24,10 +32,13 @@ for layer_number = 1 : numlayers
     if layer_number == 1    % first layer
         numvis = layers(layer_number);   % input layer
         numhid = layers(layer_number+1); % hidden layer
-        maxepoch = 3;
+        maxepoch = 5;
         fprintf('Pretraining Layer %d with RBM: %d-%d \n', layer_number,numvis,numhid);
         restart = 1;
-        rbm
+        tic
+        drbmGPU
+        t = toc;
+        disp(['Load batch time: ' num2str(t)])
     elseif layer_number == numlayers    % last layer
         numvis = layers(layer_number);
         numhid = layers(layer_number+1);        % input layer
